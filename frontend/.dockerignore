@@ -1,0 +1,21 @@
+# Ignorer les dépendances locales (elles seront installées dans l’image)
+node_modules
+npm-debug.log
+
+# Ignorer les fichiers de build (on ne copie que ceux du builder)
+.next
+dist
+
+# Ignorer les fichiers système et de configuration
+.DS_Store
+.vscode
+.idea
+*.swp
+
+# Ignorer Git et les fichiers sensibles
+.git
+.gitignore
+.env
+.env.local
+.env.development
+.env.production
