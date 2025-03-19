@@ -12,6 +12,12 @@ import nextPwa from "next-pwa";
  
  const nextConfig = {
    reactStrictMode: true,
+   webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.target = 'web';
+    }
+    return config;
+  },
  };
  
  export default withPWA(nextConfig);
