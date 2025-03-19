@@ -22,9 +22,31 @@ jobs:
 
       - name: Deploy to VPS
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-          cd orderly-pwa
-          git pull origin main
-          docker compose down
-          docker compose up -d --build
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          set -e  # Arrête le script si une commande échoue
+
+          echo "🚀 Début du déploiement sur le serveur OVH..."
+
+          # Aller dans le dossier du projet
+          cd ~/orderly-pwa || exit
+
+          # Mettre à jour le code depuis GitHub
+          echo "🔄 Mise à jour du code..."
+          git pull origin main || { echo "❌ Échec du git pull"; exit 1; }
+
+          # Vérifier si Docker doit être rebuild
+          echo "🔎 Vérification des changements dans Docker..."
+          if git diff --quiet HEAD@{1} HEAD docker-compose.yml Dockerfile; then
+              echo "📦 Pas de modifications Docker, redémarrage normal..."
+              docker compose up -d
+          else
+              echo "🔧 Reconstruction des images Docker..."
+              docker compose up -d --build
+          fi
+
+          # Nettoyage des anciennes images Docker pour éviter l’accumulation
+          echo "🧹 Nettoyage des images inutilisées..."
+          docker system prune -af || { echo "⚠️ Échec du nettoyage des images Docker"; }
+
+          echo "✅ Déploiement terminé avec succès ! 🚀"
           EOF

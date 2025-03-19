@@ -1,35 +1,22 @@
-# Étape 1 : Builder
-FROM node:18 AS builder
+# Étape 1 : Base commune
+FROM node:18 AS base
 WORKDIR /app
 
-# Copier uniquement les fichiers de dépendances pour optimiser le cache
+# Copier uniquement les fichiers de dépendances
 COPY package.json package-lock.json ./
 
-# Installer les dépendances (mise en cache si package.json n'a pas changé)
+# Étape 2 : Développement (avec hot reload)
+FROM base AS dev
+ENV NODE_ENV=development
+
+# Installation des dépendances en mode développement
 RUN npm install
 
-# Copier le reste du code source après l'installation des dépendances
+# Copier tout le code source
 COPY . .
 
-# Build de l'application Next.js
-RUN npm run build
-
-# Étape 2 : Image finale optimisée
-FROM node:18-alpine AS runner
-WORKDIR /app
-
-# Copier uniquement les fichiers nécessaires depuis le builder
-COPY --from=builder /app/.next .next
-COPY --from=builder /app/public public
-COPY --from=builder /app/package.json package.json
-COPY --from=builder /app/package-lock.json package-lock.json
-COPY --from=builder /app/node_modules node_modules
-
-# Installer uniquement les dépendances de production
-RUN npm ci --only=production
-
-# Exposer le port Next.js (3000 par défaut)
+# Exposer le port de développement
 EXPOSE 3000
 
-# Lancer Next.js en mode production
-CMD ["npm", "start"]
+# Commande pour Next.js en mode développement (hot reload activé)
+CMD ["npm", "run", "dev"]

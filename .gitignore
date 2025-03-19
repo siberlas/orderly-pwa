@@ -1,0 +1,39 @@
+.env
+.env.local
+# 🔹 Ignorer les dépendances dans frontend/
+frontend/node_modules/
+frontend/package-lock.json
+frontend/pnpm-lock.yaml
+frontend/yarn.lock
+
+# 🔹 Ignorer les builds Next.js
+frontend/.next/
+frontend/.next/cache/
+frontend/.next/static/
+
+# 🔹 Ignorer les logs et caches
+frontend/logs/
+frontend/*.log
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnp
+frontend/.pnp.js
+frontend/.cache/
+frontend/.turbo/
+frontend/.eslintcache
+
+# 🔹 Ignorer les fichiers système
+.DS_Store
+Thumbs.db
+
+# 🔹 Ignorer les fichiers Docker inutiles en prod
+docker-compose.override.yml
+
+# 🔹 Ignorer les fichiers de test et de build temporaire
+frontend/coverage/
+frontend/.vscode/
+frontend/.idea/
+frontend/*.swp
+
+

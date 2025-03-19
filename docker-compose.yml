@@ -6,8 +6,11 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "${PORT}:${PORT}"
     restart: always
     environment:
       - NODE_ENV=${NODE_ENV}
       - PORT=${PORT}
+    env_file:
+      - .env  # Charge les valeurs par défaut (dev)
+
