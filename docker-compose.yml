@@ -11,6 +11,8 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV}
       - PORT=${PORT}
+    mem_limit: 1.5g # Limite mémoire
+    mem_reservation: 1g # Mémoire réservée
     env_file:
       - .env  # Charge les valeurs par défaut (dev)
 
